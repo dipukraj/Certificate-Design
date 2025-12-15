@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Certificate Designer</title>
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="style.css">
+
+  <!-- html2canvas and jsPDF CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <h1>Certificate Designer</h1>
+      <p>Type name → live preview → Download PNG / PDF</p>
+    </header>
+
+    <main>
+      <section class="controls">
+        <label>
+          Recipient Name
+          <input id="inp-name" type="text" placeholder="Type full name..." value="Dipu K Raj" />
+        </label>
+
+        <label>
+          Certificate Title
+          <input id="inp-title" type="text" placeholder="Certificate of Participation" value="Certificate of Participation" />
+        </label>
+
+        <label>
+          Event / Reason
+          <input id="inp-event" type="text" placeholder="For outstanding contribution in XYZ" value="For outstanding contribution in College Fest" />
+        </label>
+
+        <label>
+          Date (show on certificate)
+          <input id="inp-date" type="text" placeholder="23 November 2025" value="23 November 2025" />
+        </label>
+
+        <label>
+          Upload Logo (optional)
+          <input id="inp-logo" type="file" accept="image/*" />
+        </label>
+
+        <label>
+          Theme
+          <select id="inp-theme">
+            <option value="blue">Classic Blue</option>
+            <option value="gold">Elegant Gold</option>
+            <option value="green">Fresh Green</option>
+            <option value="simple">Simple Monochrome</option>
+          </select>
+        </label>
+
+        <div class="buttons">
+          <button id="download-png">Download PNG</button>
+          <button id="download-pdf">Download PDF</button>
+        </div>
+      </section>
+
+      <section class="preview-wrap">
+        <div id="certificate" class="certificate theme-blue">
+          <div class="cert-border">
+            <div class="cert-inner">
+              <div class="cert-header">
+                <div class="logo-placeholder" id="logo-preview">Logo</div>
+                <h2 id="cert-title">Certificate of Participation</h2>
+              </div>
+
+              <div class="cert-body">
+                <p class="cert-sub">This certificate is proudly presented to</p>
+                <h1 id="cert-name">Dipu K Raj</h1>
+                <p id="cert-event">For outstanding contribution in College Fest</p>
+              </div>
+
+              <div class="cert-footer">
+                <div class="left">
+                  <p class="small">Date</p>
+                  <p id="cert-date">23 November 2025</p>
+                </div>
+                <div class="right">
+                  <p class="small">Signature</p>
+                  <div class="signature-line">Coordinator</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p class="hint">Tip: Use a high-resolution logo for best PDF quality.</p>
+      </section>
+    </main>
+
+    <footer>
+      <small>Built with ♥ — Simple Certificate Designer</small>
+    </footer>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
