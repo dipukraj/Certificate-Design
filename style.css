@@ -134,8 +134,9 @@ main{
 
 /* Footer */
 .cert-footer{display:flex;justify-content:space-between;align-items:center;margin-top:8px}
-.cert-footer .small{margin:0;color:#475569;font-size:12px}
-.signature-line{margin-top:6px;border-top:1px solid #cbd5e1;padding-top:6px;color:#0b2540;font-weight:600}
+.cert-footer .small{margin:0;color:#4b5563;font-size:12px;font-weight:500}
+#cert-date{color:#1f2937;font-weight:600;font-size:14px}
+.signature-line{margin-top:6px;border-top:1px solid #cbd5e1;padding-top:6px;color:#1f2937;font-weight:600}
 
 /* Themes */
 .theme-blue .cert-inner {
