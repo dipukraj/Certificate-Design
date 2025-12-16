@@ -16,12 +16,14 @@ body {
   color: var(--white);
   min-height: 100vh;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   padding: 10px;
   width: 100%;
   overflow-x: hidden;
   box-sizing: border-box;
+  text-align: center;
 }
 
 .app {
@@ -400,15 +402,18 @@ footer {
 }
 @media (max-width: 768px) {
   .certificate {
-    transform: scale(0.9);
+    transform: none;
     min-height: auto;
-    width: 95%;
-    max-width: 95%;
+    width: 100%;
+    max-width: 100%;
     padding: 5px;
     margin: 10px auto;
     display: flex;
     justify-content: center;
     align-items: center;
+    position: relative;
+    left: 0;
+    right: 0;
   }
   
   #cert-name {
@@ -449,11 +454,15 @@ footer {
 /* For very small devices */
 @media (max-width: 400px) {
   .certificate {
-    transform: scale(0.8);
+    transform: none;
     min-height: auto;
-    width: 98%;
-    padding: 3px;
-    margin: 5px auto;
+    width: 100%;
+    max-width: 100%;
+    padding: 5px;
+    margin: 0 auto;
+    position: relative;
+    left: 0;
+    right: 0;
   }
   
   #cert-name {

@@ -48,6 +48,42 @@ inpLogo.addEventListener('change', (e) => {
 
 // Function to handle download
 function downloadURI(uri, name) {
+  // For mobile devices, we'll use a different approach
+  if (navigator.userAgent.match(/(iPhone|iPod|iPad|Android|BlackBerry|IEMobile)/i)) {
+    // Create a temporary link element
+    const link = document.createElement('a');
+    link.href = uri;
+    link.download = name;
+    
+    // iOS devices require the link to be in the document
+    document.body.appendChild(link);
+    
+    // Create and dispatch a click event
+    const event = new MouseEvent('click', {
+      view: window,
+      bubbles: true,
+      cancelable: true
+    });
+    
+    // Try to trigger the download
+    link.dispatchEvent(event);
+    
+    // Clean up
+    setTimeout(() => {
+      document.body.removeChild(link);
+    }, 100);
+    
+    // If the download didn't start, open in new tab as fallback
+    setTimeout(() => {
+      if (!link.download) {
+        window.open(uri, '_blank');
+      }
+    }, 1000);
+    
+    return;
+  }
+  
+  // For desktop browsers
   const link = document.createElement('a');
   link.download = name;
   link.href = uri;
@@ -92,13 +128,8 @@ btnPNG.addEventListener('click', async () => {
     const fileName = `${(inpName.value || 'certificate').replace(/\s+/g,'_')}.png`;
     const dataUrl = canvas.toDataURL('image/png');
     
-    // Use different download methods for mobile and desktop
-    if (navigator.userAgent.match(/(iPhone|iPod|iPad|Android|BlackBerry|IEMobile)/i)) {
-      // For mobile, open in new tab
-      window.open(dataUrl, '_blank');
-    } else {
-      downloadURI(dataUrl, fileName);
-    }
+    // Use our enhanced download function which handles both mobile and desktop
+    downloadURI(dataUrl, fileName);
   } catch (err) {
     console.error('Error generating image:', err);
     alert('Error generating image. Please try again.');
@@ -165,14 +196,9 @@ btnPDF.addEventListener('click', async () => {
         
         const fileName = `${(inpName.value || 'certificate').replace(/\s+/g,'_')}.pdf`;
         
-        if (navigator.userAgent.match(/(iPhone|iPod|iPad|Android|BlackBerry|IEMobile)/i)) {
-          // For mobile, open in new tab
-          const pdfDataUrl = pdf.output('datauristring');
-          window.open(pdfDataUrl, '_blank');
-        } else {
-          // For desktop, download directly
-          pdf.save(fileName);
-        }
+        // For both mobile and desktop, use the same method
+        const pdfDataUrl = pdf.output('datauristring');
+        downloadURI(pdfDataUrl, fileName);
         
         resolve();
       };
