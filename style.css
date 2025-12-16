@@ -16,9 +16,9 @@ body {
   color: var(--white);
   min-height: 100vh;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: center;
-  padding: 20px 10px;
+  padding: 10px;
   width: 100%;
   overflow-x: hidden;
   box-sizing: border-box;
@@ -400,15 +400,19 @@ footer {
 }
 @media (max-width: 768px) {
   .certificate {
+    transform: scale(0.9);
+    min-height: auto;
     width: 95%;
-    min-height: 250px;
-    transform: none;
-    margin: 0 auto 20px;
+    max-width: 95%;
     padding: 5px;
+    margin: 10px auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
   
   #cert-name {
-    font-size: 22px !important;
+    font-size: 20px !important;
     margin: 5px 0 !important;
     line-height: 1.2;
   }
@@ -445,10 +449,11 @@ footer {
 /* For very small devices */
 @media (max-width: 400px) {
   .certificate {
-    transform: none;
-    min-height: 200px;
+    transform: scale(0.8);
+    min-height: auto;
     width: 98%;
     padding: 3px;
+    margin: 5px auto;
   }
   
   #cert-name {
