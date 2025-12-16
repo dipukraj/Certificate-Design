@@ -36,17 +36,35 @@ header p{margin:0;color:#b8c6d8}
 
 main{
   display:flex;
+  flex-direction: column;
   gap:22px;
+  align-items: center;
+}
+
+@media (min-width: 992px) {
+  main {
+    flex-direction: row;
+    align-items: flex-start;
+  }
 }
 
 /* Controls */
 .controls{
-  width:320px;
+  width: 100%;
+  max-width: 500px;
   background:var(--card-bg);
   border-radius:12px;
   padding:16px;
   box-shadow:0 6px 18px rgba(2,6,23,0.6);
   border:1px solid rgba(255,255,255,0.08);
+  margin: 0 auto;
+}
+
+@media (min-width: 992px) {
+  .controls {
+    width: 320px;
+    margin: 0;
+  }
 }
 
 .controls label{display:block;margin-bottom:10px;font-size:13px;color:#d7e5ff}
@@ -125,15 +143,19 @@ main{
 
 /* Certificate */
 .certificate{
-  width:820px; /* preview size (A4 landscape scaled) */
-  height:580px;
+  width: 100%;
+  max-width: 820px; /* Maximum size for desktop */
+  height: auto;
+  aspect-ratio: 16/11; /* Maintain aspect ratio similar to A4 */
+  min-height: 400px;
   border-radius:12px;
-  padding:18px;
+  padding:10px;
   background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
   box-shadow:0 12px 40px rgba(2,6,23,0.7);
   display:flex;
   align-items:center;
   justify-content:center;
+  margin: 0 auto;
 }
 
 .cert-border{
@@ -148,12 +170,19 @@ main{
 .cert-inner{
   width:100%;
   height:100%;
-  padding:34px;
+  padding: 15px;
   display:flex;
   flex-direction:column;
   justify-content:space-between;
   align-items:stretch;
   background: linear-gradient(180deg,#fff,#fdfdfd);
+  overflow: hidden;
+}
+
+@media (min-width: 768px) {
+  .cert-inner {
+    padding: 34px;
+  }
 }
 
 /* Header */
@@ -165,13 +194,51 @@ main{
 .logo-placeholder{
   width:88px;height:88px;border-radius:8px;background:linear-gradient(135deg,#e6eefc,#dbe8ff);display:flex;align-items:center;justify-content:center;color:#0e2a66;font-weight:700;font-size:13px;overflow:hidden;
 }
-.cert-header h2{margin:0;font-size:20px;color:#0b2540;font-weight:700}
+.cert-header h2{
+  margin: 0;
+  font-size: 16px;
+  color: #0b2540;
+  font-weight: 700;
+  word-wrap: break-word;
+}
+
+@media (min-width: 768px) {
+  .cert-header h2 {
+    font-size: 20px;
+  }
+}
 
 /* Body */
 .cert-body{text-align:center;padding-top:10px;padding-bottom:10px}
 .cert-sub{margin:0;color:#334155;font-size:14px}
-#cert-name{margin:14px 0 8px 0;font-size:36px;color:#071231;letter-spacing:0.6px}
-#cert-event{margin:0;color:#334155;font-size:16px}
+#cert-name{
+  margin: 8px 0 6px 0;
+  font-size: 24px;
+  color: #071231;
+  letter-spacing: 0.6px;
+  word-wrap: break-word;
+  padding: 0 10px;
+}
+
+@media (min-width: 768px) {
+  #cert-name {
+    margin: 14px 0 8px 0;
+    font-size: 36px;
+  }
+}
+#cert-event{
+  margin: 0;
+  color: #334155;
+  font-size: 14px;
+  padding: 0 10px;
+  word-wrap: break-word;
+}
+
+@media (min-width: 768px) {
+  #cert-event {
+    font-size: 16px;
+  }
+}
 
 /* Footer */
 .cert-footer{display:flex;justify-content:space-between;align-items:center;margin-top:8px}

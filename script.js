@@ -46,55 +46,159 @@ inpLogo.addEventListener('change', (e) => {
   reader.readAsDataURL(file);
 });
 
+// Function to handle download
+function downloadURI(uri, name) {
+  const link = document.createElement('a');
+  link.download = name;
+  link.href = uri;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
 // Download PNG
 btnPNG.addEventListener('click', async () => {
-  // scale up for higher resolution
-  const scale = 2;
-  const opts = {
-    scale,
-    useCORS: true,
-    allowTaint: true,
-    backgroundColor: null
-  };
   try {
+    // Show loading state
+    btnPNG.textContent = 'Generating...';
+    btnPNG.disabled = true;
+    
+    // Calculate scale based on device
+    const isMobile = window.innerWidth <= 768;
+    const scale = isMobile ? 1.5 : 2;
+    
+    const opts = {
+      scale,
+      useCORS: true,
+      allowTaint: true,
+      backgroundColor: null,
+      logging: false,
+      scrollX: 0,
+      scrollY: -window.scrollY
+    };
+
+    // Temporarily adjust certificate size for better quality
+    const originalWidth = certificate.style.width;
+    const originalHeight = certificate.style.height;
+    certificate.style.width = '820px';
+    certificate.style.height = '580px';
+
     const canvas = await html2canvas(certificate, opts);
-    const link = document.createElement('a');
-    link.download = `${(inpName.value || 'certificate').replace(/\s+/g,'_')}.png`;
-    link.href = canvas.toDataURL('image/png');
-    link.click();
+    
+    // Restore original size
+    certificate.style.width = originalWidth;
+    certificate.style.height = originalHeight;
+    
+    const fileName = `${(inpName.value || 'certificate').replace(/\s+/g,'_')}.png`;
+    const dataUrl = canvas.toDataURL('image/png');
+    
+    // Use different download methods for mobile and desktop
+    if (navigator.userAgent.match(/(iPhone|iPod|iPad|Android|BlackBerry|IEMobile)/i)) {
+      // For mobile, open in new tab
+      window.open(dataUrl, '_blank');
+    } else {
+      downloadURI(dataUrl, fileName);
+    }
   } catch (err) {
-    alert('Error generating image: ' + err.message);
+    console.error('Error generating image:', err);
+    alert('Error generating image. Please try again.');
+  } finally {
+    btnPNG.textContent = 'Download PNG';
+    btnPNG.disabled = false;
   }
 });
 
 // Download PDF (A4 landscape)
 btnPDF.addEventListener('click', async () => {
-  const { jsPDF } = window.jspdf;
-  const scale = 2; // for higher res
   try {
-    const canvas = await html2canvas(certificate, { scale, useCORS:true, allowTaint:true, backgroundColor: null });
+    // Show loading state
+    btnPDF.textContent = 'Generating PDF...';
+    btnPDF.disabled = true;
+    
+    const { jsPDF } = window.jspdf;
+    const isMobile = window.innerWidth <= 768;
+    const scale = isMobile ? 1.5 : 2;
+    
+    // Temporarily adjust certificate size for better quality
+    const originalWidth = certificate.style.width;
+    const originalHeight = certificate.style.height;
+    certificate.style.width = '820px';
+    certificate.style.height = '580px';
+    
+    const canvas = await html2canvas(certificate, { 
+      scale,
+      useCORS: true, 
+      allowTaint: true, 
+      backgroundColor: null,
+      logging: false,
+      scrollX: 0,
+      scrollY: -window.scrollY
+    });
+    
+    // Restore original size
+    certificate.style.width = originalWidth;
+    certificate.style.height = originalHeight;
+    
     const imgData = canvas.toDataURL('image/png');
-
-    // A4 landscape in pt: 842 x 595 (approximately)
-    const pdf = new jsPDF({ orientation: 'landscape', unit: 'pt', format: 'a4' });
+    const pdf = new jsPDF({ 
+      orientation: 'landscape', 
+      unit: 'pt', 
+      format: 'a4' 
+    });
+    
     const pageWidth = pdf.internal.pageSize.getWidth();
     const pageHeight = pdf.internal.pageSize.getHeight();
-
-    // fit image into page while preserving aspect ratio
+    
+    // Create image to get dimensions
     const img = new Image();
     img.src = imgData;
-    img.onload = function(){
-      const imgW = img.width;
-      const imgH = img.height;
-      const ratio = Math.min(pageWidth / imgW, pageHeight / imgH);
-      const w = imgW * ratio;
-      const h = imgH * ratio;
-      const x = (pageWidth - w) / 2;
-      const y = (pageHeight - h) / 2;
-      pdf.addImage(imgData, 'PNG', x, y, w, h, undefined, 'FAST');
-      pdf.save(`${(inpName.value || 'certificate').replace(/\s+/g,'_')}.pdf`);
-    };
+    
+    return new Promise((resolve) => {
+      img.onload = function() {
+        const imgWidth = img.width;
+        const imgHeight = img.height;
+        const ratio = Math.min((pageWidth - 40) / imgWidth, (pageHeight - 40) / imgHeight);
+        const centerX = (pageWidth - (imgWidth * ratio)) / 2;
+        const centerY = (pageHeight - (imgHeight * ratio)) / 2;
+        
+        pdf.addImage(imgData, 'PNG', centerX, centerY, imgWidth * ratio, imgHeight * ratio, undefined, 'FAST');
+        
+        const fileName = `${(inpName.value || 'certificate').replace(/\s+/g,'_')}.pdf`;
+        
+        if (navigator.userAgent.match(/(iPhone|iPod|iPad|Android|BlackBerry|IEMobile)/i)) {
+          // For mobile, open in new tab
+          const pdfDataUrl = pdf.output('datauristring');
+          window.open(pdfDataUrl, '_blank');
+        } else {
+          // For desktop, download directly
+          pdf.save(fileName);
+        }
+        
+        resolve();
+      };
+    });
   } catch (err) {
-    alert('Error generating PDF: ' + err.message);
+    console.error('Error generating PDF:', err);
+    alert('Error generating PDF. Please try again.');
+  } finally {
+    btnPDF.textContent = 'Download PDF';
+    btnPDF.disabled = false;
   }
 });
+
+// Handle mobile viewport
+function handleViewport() {
+  const isMobile = window.innerWidth <= 768;
+  if (isMobile) {
+    // Add mobile-specific classes or styles if needed
+    document.body.classList.add('mobile-view');
+  } else {
+    document.body.classList.remove('mobile-view');
+  }
+}
+
+// Initial check
+handleViewport();
+
+// Update on resize
+window.addEventListener('resize', handleViewport);
